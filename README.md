@@ -217,6 +217,60 @@ Durante a realização das oficinas e eventos, o sistema precisa estar acessíve
 
 ## Diagramas
 
+Para guiar o desenvolvimento do projeto, e a fim de delimitar os comportamentos esperados dos componentes, foram desenvolvidos os seguintes diagramas UML:
+
+### Diagrama de caso de uso
+
+Este diagrama demonstra o fluxo de interação do usuário com o sistema, destacando a centralidade da autenticação para o acesso às diferentes funcionalidades. Representa as principais interações do usuário com o sistema.
+
+<div align="center" style="display: display_block">
+
+![Imagem do WhatsApp de 2025-04-24 à(s) 10 24 14_c1000cdd](https://github.com/user-attachments/assets/7e4bbedd-2644-4395-96a2-51c9a5b1ba77)
+
+</div>
+
+- **Ator Principal**: O Aluno Voluntário representa os estudantes da UTFPR que atuam como instrutores e administradores do projeto.
+  
+- **Casos de Uso**: Representam as principais funcionalidades do sistema:
+  - **Cadastrar Alunos Voluntários**: Registro de novos membros da UTFPR no sistema;
+  - **Fazer Login**: Autenticação de usuários para acesso ao sistema;
+  - **Criar Oficina**: Cadastro e agendamento de novas oficinas/eventos;
+  - **Gerenciar Instrutores**: Associação de alunos voluntários como instrutores das oficinas;
+  - **Cadastrar Alunos Participantes**: Registro das crianças e adolescentes que participam das oficinas;
+  - **Registrar Presença**: Marcação de frequência dos participantes nas atividades;
+  - **Consultar Relatórios**: Visualização de dados consolidados sobre participação e frequência.
+
+- **Relacionamentos**:
+  - Todas as funcionalidades principais requerem autenticação, representada pelas relações de inclusão com o caso de uso "Fazer Login".
+
+### Diagrama de classes
+
+O diagrama de classes apresenta a estrutura de dados do sistema e os relacionamentos entre as entidades principais. Tem por objetivo representar um modelo estruturado das funcionalidades requeridas pelo sistema.
+
+<div align="center" style="display: display_block">
+
+![Imagem do WhatsApp de 2025-04-24 à(s) 10 24 35_bd6c5c72](https://github.com/user-attachments/assets/56ca838d-e41e-4c80-a262-62f53e99d031)
+
+</div>
+
+- **Usuário**: Classe base que contém informações comuns a todos os usuários do sistema, como identificação, credenciais de acesso e dados pessoais básicos;
+
+- **Instrutor**: Especialização da classe Usuário, representando os alunos da UTFPR que atuam no projeto. Adiciona informações específicas como a função desempenhada;
+
+- **Oficina**: Representa os eventos e atividades realizados pelo projeto ELLP, contendo informações como título, descrição, data e horários;
+
+- **OficinaInstrutor**: Classe de associação que implementa o relacionamento muitos-para-muitos entre Oficinas e Instrutores, permitindo que múltiplos instrutores sejam associados a múltiplas oficinas;
+
+- **Participante**: Armazena os dados dos alunos participantes do projeto, incluindo informações pessoais e instituição de origem;
+
+- **Presença**: Atua como a classe central para o registro de frequência, estabelecendo a relação entre Participantes e Oficinas. Cada registro representa tanto a inscrição de um participante em uma oficina quanto seu status de presença.
+
+Os relacionamentos entre as classes foram projetados para permitir:
+1. Um instrutor pode participar de várias oficinas
+2. Uma oficina pode ter vários instrutores
+3. Um participante pode frequentar várias oficinas
+4. Uma oficina pode ter vários participantes
+5. O registro de presença é único para cada combinação de participante e oficina
 
 ---
 
@@ -226,6 +280,24 @@ Durante a realização das oficinas e eventos, o sistema precisa estar acessíve
 ---
 
 ## Automação de testes
+
+A automação de testes para o projeto tem por objetivo garantiar que as funcionalidades críticas do sistema funcionem conforme o esperado. Implementar uma estratégia de automação para testes repetitivos, que deveriam ser feitos a cada incremento, garantirá maior agilidade ao processo de desenvolvimento, reduzindo a necessidade de testes manuais e o risco de falhas humanas.
+
+### Escopo dos Testes
+- **Testes End-to-End**: Utilização da ferramenta Postman para simular fluxos completos do sistema, como cadastro, login, registro de presença e consulta de relatórios.
+- **Validação de Rotas**: Testar o comportamento e retorno das rotas, incluindo autenticação, criação de usuários e registro de dados, verificando se respostas de erros estão sendo retornadas apropriadamente.
+
+### Ferramentas
+- **Postman**: Ferramenta para automação de testes de API, com coleções configuradas para execução automatizada.
+- **GitHub Actions**: Integração dos testes com pipelines de CI/CD próprias do repositório GitHub.
+
+### Execução dos Testes
+- Os testes serão executados inicialmente no ambiente de desenvolvimento, com verificações manuais pela ferramenta Postman. Posteriormente, testes automatizados serão desenvolvidos para integrar diversos passos de testes, e os mesmos serão integrados ao fluxo de CI/CD.
+
+### Critérios de Sucesso
+- **Cobertura**: Verificação dos principais fluxos de uso;
+- **Tempo de Execução**: Conclusão dos testes de CI/CD em até 10 minutos;
+- **Atualização Contínua e Compatibilidade**: Manutenção dos testes com base nas mudanças do sistema.
 
 ---
 
@@ -253,4 +325,5 @@ As tecnologias utilizadas para o desenvolvimento do projeto são:
 
 ### Outras
 
+- Postman (testes);
 - GitHub Actions (CI/CD).
