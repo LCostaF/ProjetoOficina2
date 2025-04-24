@@ -276,6 +276,70 @@ Os relacionamentos entre as classes foram projetados para permitir:
 
 ## Arquitetura
 
+A arquitetura do sistema foi projetada utilizando serviços do Google Cloud Platform (GCP), seguindo um modelo de aplicação web moderna. O diagrama abaixo ilustra os principais componentes da arquitetura e suas interações:
+
+<div align="center" style="display: display_block">
+
+![image](https://github.com/user-attachments/assets/bcfb86d7-e9cd-409b-9c55-7603072aed73)
+
+
+</div>
+
+### Componentes principais
+
+1. **Interface do Usuário (Cliente)**
+   - Representa o dispositivo do usuário (computador, tablet ou smartphone) que acessa a aplicação web;
+   - Interage com o sistema através de um navegador web.
+
+2. **Firebase Hosting**
+   - Hospeda a aplicação front-end desenvolvida em React, JavaScript, HTML e CSS;
+   - Fornece entrega rápida e segura do conteúdo estático para os usuários;
+   - Rotula como "Front" no diagrama, indicando a camada de apresentação da aplicação.
+
+3. **Firebase Authentication**
+   - Gerencia todo o processo de autenticação e autorização de usuários;
+   - Implementa autenticação segura para os alunos voluntários da UTFPR;
+   - Protege os recursos e funcionalidades do sistema de acessos não autorizados.
+
+4. **API Gateway**
+   - Atua como ponto central para gerenciamento das APIs do sistema;
+   - Encaminha solicitações do cliente para os serviços apropriados no back-end;
+   - Fornece uma camada de segurança adicional para as APIs do sistema.
+
+5. **Back-end**
+   - Implementado em Python, contém a lógica de negócio do sistema;
+   - Processa solicitações do cliente encaminhadas pelo API Gateway;
+   - Realiza operações no banco de dados e retorna respostas ao cliente.
+
+6. **Database**
+   - Utiliza o Firestore para armazenamento dos dados da aplicação;
+   - Mantém informações sobre usuários, oficinas, participantes e registros de presença;
+   - Provê capacidades de banco de dados NoSQL escalável e flexível.
+
+7. **GitHub**
+   - Plataforma utilizada para versionamento do código e colaboração entre desenvolvedores;
+   - Não é parte direta da aplicação em execução, mas essencial no processo de desenvolvimento;
+
+8. **Cloud Build**
+   - Serviço de integração e entrega contínuas (CI/CD) do Google Cloud;
+   - Automatiza o processo de build, teste e deploy do código a partir do repositório GitHub;
+   - Garante que alterações sejam testadas antes de serem implantadas.
+
+9. **Artifact Registry**
+   - Armazena e gerencia os artefatos de build (containers, pacotes);
+   - Fornece os artefatos necessários para o deployment da aplicação;
+   - Comunica-se com o Firebase Hosting para implantação do front-end.
+
+### Fluxo de operação
+
+1. O usuário acessa a aplicação através de seu navegador, que carrega o front-end hospedado no Firebase Hosting;
+2. Ao realizar login, a autenticação é processada pelo Firebase Authentication;
+3. Após autenticação, as interações do usuário com o sistema (como cadastro de oficinas ou registro de presença) são enviadas ao API Gateway;
+4. O API Gateway encaminha as solicitações para o back-end apropriado;
+5. O back-end processa as solicitações, interage com o banco de dados Firestore conforme necessário, e retorna os resultados;
+6. Para o processo de desenvolvimento e implantação, o código é versionado no GitHub, construído pelo Cloud Build e os artefatos são armazenados no Artifact Registry antes de serem implantados.
+
+Esta arquitetura foi projetada para fornecer um sistema escalável, seguro e de alta disponibilidade, alinhado com os requisitos especificados para o projeto ELLP, garantindo proteção dos dados pessoais e disponibilidade nos períodos críticos de uso.
 
 ---
 
