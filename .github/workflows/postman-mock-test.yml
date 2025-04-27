@@ -1,0 +1,24 @@
+name: Run Postman Tests with Mock Server
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Collection with Mock URL
+        run: |
+          newman run ./collections/officina.postman_collection.json \
+            --environment ./environments/mockenv.postman_environment.json \
+            --global-var "baseUrl=${{vars.MOCK_URL}}"
