@@ -1,0 +1,95 @@
+{
+	"info": {
+		"_postman_id": "064f7eaf-0e53-4214-b469-54795dab68ff",
+		"name": "Officina2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39371092"
+	},
+	"item": [
+		{
+			"name": "Cadastro de Aluno Voluntário (RF01)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Retorna mensagem de sucesso\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.mensagem).to.eql(\"Cadastro realizado com sucesso!\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Ana Souza\",\r\n  \"email\": \"ana.souza@utfpr.edu.br\",\r\n  \"senha\": \"SenhaForte@123\",\r\n  \"matricula\": \"2023012345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://7ff824ee-1256-4f25-981d-b1034bb11324.mock.pstmn.io/cadastro-voluntario",
+					"protocol": "https",
+					"host": [
+						"7ff824ee-1256-4f25-981d-b1034bb11324",
+						"mock",
+						"pstmn",
+						"io"
+					],
+					"path": [
+						"cadastro-voluntario"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Cadastro de Aluno Voluntário (RF01)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Ana Souza\",\r\n  \"email\": \"ana.souza@utfpr.edu.br\",\r\n  \"senha\": \"SenhaForte@123\",\r\n  \"matricula\": \"2023012345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://7ff824ee-1256-4f25-981d-b1034bb11324.mock.pstmn.io/cadastro-voluntario",
+							"protocol": "https",
+							"host": [
+								"7ff824ee-1256-4f25-981d-b1034bb11324",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"cadastro-voluntario"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": null,
+					"header": [],
+					"cookie": [],
+					"body": "{\r\n  \"mensagem\": \"Cadastro realizado com sucesso!\"\r\n}"
+				}
+			]
+		}
+	]
+}
