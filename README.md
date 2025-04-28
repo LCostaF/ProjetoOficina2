@@ -363,10 +363,6 @@ A automação de testes para o projeto tem por objetivo garantiar que as funcion
 - **Tempo de Execução**: Conclusão dos testes de CI/CD em até 10 minutos;
 - **Atualização Contínua e Compatibilidade**: Manutenção dos testes com base nas mudanças do sistema.
 
-Perfeito! Vou montar uma versão do seu `README.md` com **badges** para ficar mais bonito e profissional.
-
-Aqui está:
-
 ---
 
 ## Testes de API com Postman, Mock Server e GitHub Actions
@@ -380,7 +376,7 @@ Esses arquivos são usados para executar os testes localmente e na pipeline do G
 
 ---
 
-## 🚀 Executando os Testes Localmente
+### 🚀 Executando os Testes Localmente
 
 Instale o Newman:
 
@@ -401,7 +397,7 @@ Substitua `https://SEU-MOCK-URL.mock.pstmn.io` pela URL do seu Mock Server.
 
 ---
 
-## ⚙️ GitHub Actions
+### ⚙️ GitHub Actions
 
 A pipeline é acionada a cada push para rodar os testes.
 
@@ -419,13 +415,13 @@ O valor da variável `MOCK_URL` deve ser definido nos **Secrets and Variables** 
 
 ---
 
-## Observações
+#### Observações
 
 - Os arquivos de Collection e Environment estão versionados neste repositório.
 
 ---
 
-## Configuração do script preliminar para teste
+#### Configuração do script preliminar para teste
 
 Exemplo de script de teste inicial para o requisito RF01 - Cadastro de Alunos Voluntários:
 
@@ -451,7 +447,7 @@ Exemplo de script de teste inicial para o requisito RF01 - Cadastro de Alunos Vo
         pm.expect(jsonData.mensagem).to.eql("Cadastro realizado com sucesso!");
     });
     ```
-### Criar o Mock Server
+#### Criar o Mock Server
 1. Na Collection, clique nos ... (três pontinhos) > More > Mock
 2. Escolha:
    - Environment: No Environment
@@ -463,7 +459,7 @@ Exemplo de script de teste inicial para o requisito RF01 - Cadastro de Alunos Vo
     POST https://abcd1234.mock.pstmn.io/cadastro-voluntario
     ```
 
-### Criar um exemplo (example response) para o Mock
+#### Criar um exemplo (example response) para o Mock
 
 1. Clique na Request > clique nos três pontinhos (...) > Add Example:
    - Status Code: Escolha o status (200, 201, 404, etc.).
