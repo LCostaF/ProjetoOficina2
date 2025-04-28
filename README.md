@@ -363,6 +363,124 @@ A automação de testes para o projeto tem por objetivo garantiar que as funcion
 - **Tempo de Execução**: Conclusão dos testes de CI/CD em até 10 minutos;
 - **Atualização Contínua e Compatibilidade**: Manutenção dos testes com base nas mudanças do sistema.
 
+Perfeito! Vou montar uma versão do seu `README.md` com **badges** para ficar mais bonito e profissional.
+
+Aqui está:
+
+---
+
+## Testes de API com Postman, Mock Server e GitHub Actions
+
+### 📁 Estrutura de Testes
+
+- **Collection:** [./collections/officina.postman_collection.json](./collections/officina.postman_collection.json)
+- **Environment:** [./environments/meu-environment.json](./environments/mockenv.postman_environment.json)
+
+Esses arquivos são usados para executar os testes localmente e na pipeline do GitHub.
+
+---
+
+## 🚀 Executando os Testes Localmente
+
+Instale o Newman:
+
+```bash
+npm install -g newman
+```
+
+Execute:
+
+```bash
+newman run ./collections/officina.postman_collection.json \
+    --environment ./environments/mockenv.postman_environment.json \
+    --global-var "baseUrl=https://SEU-MOCK-URL.mock.pstmn.io"
+```
+
+**Importante:**  
+Substitua `https://SEU-MOCK-URL.mock.pstmn.io` pela URL do seu Mock Server.
+
+---
+
+## ⚙️ GitHub Actions
+
+A pipeline é acionada a cada push para rodar os testes.
+
+Configuração de exemplo:
+
+```yaml
+- name: Run Postman Tests with Newman
+  run: |
+    newman run ./collections/minha-collection.json \
+      --environment ./environments/meu-environment.json \
+      --global-var "baseUrl=${{ vars.MOCK_URL }}"
+```
+
+O valor da variável `MOCK_URL` deve ser definido nos **Secrets and Variables** do repositório no GitHub.
+
+---
+
+## Observações
+
+- Os arquivos de Collection e Environment estão versionados neste repositório.
+
+---
+
+## Configuração do script preliminar para teste
+
+Exemplo de script de teste inicial para o requisito RF01 - Cadastro de Alunos Voluntários:
+
+1. Crie uma colletion no `Postman`
+2. Crie uma request do tipo POST
+3. No Body (JSON) adicione:
+   ```json
+    {
+      "nome": "João Silva",
+      "email": "joao.silva@example.com",
+      "senha": "SenhaForte123!",
+      "matricula": "2023123456"
+    }
+    ```
+4. Na aba Scripts > Post-response:
+   ```bash
+    pm.test("Status code é 201", function () {
+        pm.response.to.have.status(201);
+    });
+    
+    pm.test("Retorna mensagem de sucesso", function () {
+        var jsonData = pm.response.json();
+        pm.expect(jsonData.mensagem).to.eql("Cadastro realizado com sucesso!");
+    });
+    ```
+### Criar o Mock Server
+1. Na Collection, clique nos ... (três pontinhos) > More > Mock
+2. Escolha:
+   - Environment: No Environment
+   - Save the mock server URL as an new environment variable
+   - Clique em Create Mock Server
+3. O Postman irá gerar uma URL base automática
+4. Adicione a URL gerada na sua request POST:
+    ```bash
+    POST https://abcd1234.mock.pstmn.io/cadastro-voluntario
+    ```
+
+### Criar um exemplo (example response) para o Mock
+
+1. Clique na Request > clique nos três pontinhos (...) > Add Example:
+   - Status Code: Escolha o status (200, 201, 404, etc.).
+   - Body: Aqui você coloca o JSON, HTML ou o que for esperado como resposta.
+   - Headers (opcional): Você pode adicionar headers tipo Content-Type: application/json
+2. Só testar a rota no `Postman`, para testar nosso script de teste adicione a seguinte rota:
+   ```bash
+    POST https://abcd1234.mock.pstmn.io/cadastro-voluntario
+    ```
+3. Ao executar essa requisição no POSTMAN verá o seguinte retorno como resposta:
+    ```bash
+    Status Code: 201 Created
+    
+    {
+      "mensagem": "Cadastro realizado com sucesso!"
+    }
+    ```
 ---
 
 ## Tecnologias
