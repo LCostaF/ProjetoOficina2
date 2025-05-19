@@ -1,17 +1,26 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "@/services/firebase";
 import { useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useAuth } from "@/hooks/useAuth"; // Import useAuth to track authentication status
 import "@/styles/login.css";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth(); // Use auth context to check login status
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (user && !authLoading) {
+      navigate("/");
+    }
+  }, [user, authLoading, navigate]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -23,13 +32,41 @@ export default function Login() {
     setErro("");
     
     try {
+      // Sign in with Firebase
       await signInWithEmailAndPassword(auth, email, senha);
-      navigate("/");
+      // Note: We don't navigate here. The useEffect will handle redirect when auth state changes
     } catch (err) {
-      setErro("Email ou senha inválidos");
+      console.error("Login error:", err);
+      
+      // Provide more specific error messages based on Firebase error codes
+      if (err.code === 'auth/invalid-credential' || 
+          err.code === 'auth/user-not-found' || 
+          err.code === 'auth/wrong-password') {
+        setErro("Email ou senha inválidos");
+      } else if (err.code === 'auth/too-many-requests') {
+        setErro("Muitas tentativas de login. Tente novamente mais tarde.");
+      } else {
+        setErro("Erro ao fazer login. Por favor, tente novamente.");
+      }
       setIsLoading(false);
     }
   };
+
+  // If authentication is in process from Firebase, prevent form interaction
+  if (authLoading) {
+    return (
+      <div className="login-container">
+        <div className="login-card">
+          <div className="login-header">
+            <h2>Carregando...</h2>
+          </div>
+          <div className="loading-indicator">
+            <span className="spinner"></span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="login-container">
@@ -49,6 +86,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
           
@@ -62,12 +100,14 @@ export default function Login() {
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 required
+                disabled={isLoading}
               />
               <button
                 type="button"
                 className="toggle-password"
                 onClick={togglePasswordVisibility}
                 aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                disabled={isLoading}
               >
                 {showPassword ? <FiEyeOff /> : <FiEye />}
               </button>
