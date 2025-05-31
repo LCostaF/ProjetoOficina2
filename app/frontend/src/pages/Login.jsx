@@ -2,20 +2,20 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState, useEffect } from "react";
 import { auth } from "@/services/firebase";
 import { useNavigate } from "react-router-dom";
-import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useAuth } from "@/hooks/useAuth"; // Import useAuth to track authentication status
+import { FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
+import { useAuth } from "@/hooks/useAuth";
 import "@/styles/login.css";
+import "@/styles/global.css";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth(); // Use auth context to check login status
+  const { user, loading: authLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Redirect if user is already logged in
   useEffect(() => {
     if (user && !authLoading) {
       navigate("/");
@@ -30,15 +30,11 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     setErro("");
-    
+
     try {
-      // Sign in with Firebase
       await signInWithEmailAndPassword(auth, email, senha);
-      // Note: We don't navigate here. The useEffect will handle redirect when auth state changes
     } catch (err) {
       console.error("Login error:", err);
-      
-      // Provide more specific error messages based on Firebase error codes
       if (err.code === 'auth/invalid-credential' || 
           err.code === 'auth/user-not-found' || 
           err.code === 'auth/wrong-password') {
@@ -52,7 +48,6 @@ export default function Login() {
     }
   };
 
-  // If authentication is in process from Firebase, prevent form interaction
   if (authLoading) {
     return (
       <div className="login-container">
@@ -75,21 +70,21 @@ export default function Login() {
           <h2>Bem-vindo</h2>
           <p>Faça login para acessar sua conta</p>
         </div>
-        
+
         <form onSubmit={handleLogin} className="login-form">
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email Institucional</label>
             <input
               id="email"
               type="email"
-              placeholder="seu@email.com"
+              placeholder="seu.nome@alunos.utfpr.edu.br"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isLoading}
             />
           </div>
-          
+
           <div className="form-group password-group">
             <label htmlFor="senha">Senha</label>
             <div className="password-input-wrapper">
@@ -113,9 +108,9 @@ export default function Login() {
               </button>
             </div>
           </div>
-          
+
           {erro && <div className="error-message">{erro}</div>}
-          
+
           <button type="submit" className="login-button" disabled={isLoading}>
             {isLoading ? (
               <span className="spinner"></span>
@@ -124,7 +119,7 @@ export default function Login() {
             )}
           </button>
         </form>
-        
+
         <div className="login-footer">
           <p>
             Não tem uma conta? <a href="/registro">Cadastre-se</a>
@@ -132,6 +127,11 @@ export default function Login() {
           <a href="/esqueci-senha" className="forgot-password">
             Esqueci minha senha
           </a>
+          <p style={{ marginTop: "20px" }}>
+            <a href="/welcome" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+              <FiArrowLeft /> Voltar para a página inicial
+            </a>
+          </p>
         </div>
       </div>
     </div>
