@@ -32,6 +32,7 @@ export function ApiProvider({ children }) {
 
   useEffect(() => {
     if (token) {
+      console.log("Bearer token: ", token);
       const client = createApiClient(token, refreshToken, apiBaseUrl);
       setApiClient(client);
     } else {
