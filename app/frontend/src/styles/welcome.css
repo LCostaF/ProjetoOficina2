@@ -1,0 +1,128 @@
+:root {
+  --ellp-blue: #0ca3d2;
+  --ellp-blue-light: #71ccf3;
+  --ellp-blue-lighter: #e0f5ff;
+  --ellp-dark: #1c2b35;
+}
+
+.welcome-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  font-family: 'Montserrat', sans-serif;
+  padding: 20px;
+}
+
+.welcome-content {
+  max-width: 1000px;
+  width: 100%;
+  text-align: center;
+  padding: 40px 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  background-color: white;
+}
+
+.welcome-logo {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ellp-dark);
+  margin-bottom: 12px;
+}
+
+.welcome-subtitle {
+  font-size: 1.2rem;
+  color: #4a5568;
+  margin-bottom: 40px;
+}
+
+.welcome-description {
+  font-size: 1rem;
+  color: #4a5568;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+.welcome-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.welcome-button {
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.welcome-button.primary {
+  background-color: var(--ellp-blue);
+  color: white;
+}
+
+.welcome-button.primary:hover {
+  background-color: #0991bc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(12, 163, 210, 0.3);
+}
+
+.welcome-button.secondary {
+  background-color: white;
+  color: var(--ellp-blue);
+  border: 2px solid var(--ellp-blue);
+}
+
+.welcome-button.secondary:hover {
+  background-color: var(--ellp-blue-lighter);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(12, 163, 210, 0.1);
+}
+
+.welcome-footer {
+  margin-top: 40px;
+  font-size: 0.9rem;
+  color: #718096;
+}
+
+.wave-background {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  opacity: 0.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .welcome-title {
+    font-size: 2rem;
+  }
+
+  .welcome-buttons {
+    flex-direction: column;
+  }
+
+  .welcome-button {
+    width: 100%;
+  }
+}
