@@ -25,13 +25,11 @@ export default function Registro() {
   };
 
   const validateMatricula = (matricula) => {
-    //validar matrícula
     const matriculaRegex = /^[a-zA-Z]\d{7}$/;
     return matriculaRegex.test(matricula);
   };
 
   const validateSenha = (senha) => {
-    //senha deve ter pelo menos 8 caracteres, incluindo números e letras
     return senha.length >= 8 && /\d/.test(senha) && /[a-zA-Z]/.test(senha);
   };
 

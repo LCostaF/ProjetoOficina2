@@ -10,7 +10,6 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
 
-  //get token
   const getToken = useCallback(async (firebaseUser) => {
     if (!firebaseUser) {
       setToken(null);
@@ -28,7 +27,6 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  //refresh the token when needed
   const refreshToken = useCallback(async () => {
     if (user) {
       try {
@@ -43,7 +41,6 @@ export function AuthProvider({ children }) {
     return null;
   }, [user]);
 
-  //authentication listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
@@ -62,7 +59,6 @@ export function AuthProvider({ children }) {
     };
   }, [getToken]);
 
-  //auth context value
   const authContextValue = {
     user,
     loading,

@@ -36,14 +36,12 @@ const logger = {
     }
   },
 
-  // Função especial para logs relacionados à autenticação
   auth: (message, ...args) => {
     if (currentLogLevel <= LOG_LEVELS.DEBUG) {
       console.log(`[AUTH] ${message}`, ...args);
     }
   },
 
-  // Função especial para logs relacionados à API
   api: (message, ...args) => {
     if (currentLogLevel <= LOG_LEVELS.DEBUG) {
       console.log(`[API] ${message}`, ...args);

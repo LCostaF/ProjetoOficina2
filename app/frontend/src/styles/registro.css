@@ -136,3 +136,26 @@
   color: var(--ellp-gray);
   margin-top: 4px;
 }
+
+.upload-progress {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--ellp-dark);
+}
+
+.progress-bar-container {
+  width: 100%;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  height: 8px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--ellp-blue);
+  width: 0%;
+  border-radius: 4px;
+  transition: width 0.3s ease-in-out;
+}

@@ -3,6 +3,9 @@ import Login from "@/pages/Login";
 import Home from "@/pages/Home";
 import Welcome from "@/pages/Welcome";
 import Registro from "@/pages/Registro";
+import CadastroOficina from "@/pages/CadastroOficina";
+import GerenciarOficinas from "@/pages/GerenciarOficinas";
+import EditarOficina from "@/pages/EditarOficina";
 import { useAuth } from "@/hooks/useAuth";
 
 function PrivateRoute({ children }) {
@@ -40,6 +43,30 @@ export default function Router() {
             <PublicOnlyRoute>
               <Registro />
             </PublicOnlyRoute>
+          }
+        />
+        <Route
+          path="/oficinas"
+          element={
+            <PrivateRoute>
+              <GerenciarOficinas />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/oficinas/cadastro"
+          element={
+            <PrivateRoute>
+              <CadastroOficina />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/oficinas/editar/:id"
+          element={
+            <PrivateRoute>
+              <EditarOficina />
+            </PrivateRoute>
           }
         />
         <Route

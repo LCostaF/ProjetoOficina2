@@ -63,7 +63,7 @@ export default function Dashboard() {
         <section className="dashboard-welcome">
           <h2>Bem-vindo, {displayName.split(" ")[0]}!</h2>
           <p>
-            Este é o painel de controle do Sistema de Registro de Presença do projeto ELLP. 
+            Este é o painel de controle do Sistema de Registro de Presença do projeto ELLP.
             Aqui você pode gerenciar oficinas, participantes e registros de presença.
           </p>
         </section>
@@ -77,7 +77,7 @@ export default function Dashboard() {
             <p className="card-description">
               Crie e gerencie oficinas e eventos do projeto ELLP.
             </p>
-            <a href="#" className="card-link">
+            <a onClick={() => navigate("/oficinas")} className="card-link" style={{ cursor: 'pointer' }}>
               Gerenciar oficinas <FiChevronRight size={14} />
             </a>
           </div>
