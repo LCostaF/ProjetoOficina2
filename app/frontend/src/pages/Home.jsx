@@ -90,7 +90,7 @@ export default function Dashboard() {
             <p className="card-description">
               Cadastre e gerencie os participantes das oficinas.
             </p>
-            <a href="#" className="card-link">
+            <a onClick={() => navigate("/participantes")} className="card-link" style={{ cursor: 'pointer' }}>
               Gerenciar participantes <FiChevronRight size={14} />
             </a>
           </div>

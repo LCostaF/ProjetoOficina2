@@ -6,6 +6,9 @@ import Registro from "@/pages/Registro";
 import CadastroOficina from "@/pages/CadastroOficina";
 import GerenciarOficinas from "@/pages/GerenciarOficinas";
 import EditarOficina from "@/pages/EditarOficina";
+import GerenciarParticipantes from "@/pages/GerenciarParticipantes";
+import CadastroParticipante from "@/pages/CadastroParticipante";
+import EditarParticipante from "@/pages/EditarParticipante";
 import { useAuth } from "@/hooks/useAuth";
 
 function PrivateRoute({ children }) {
@@ -69,6 +72,54 @@ export default function Router() {
             </PrivateRoute>
           }
         />
+          <Route
+              path="/participantes"
+              element={
+                  <PrivateRoute>
+                      <GerenciarParticipantes />
+                  </PrivateRoute>
+              }
+          />
+          <Route
+              path="/participantes/cadastro"
+              element={
+                  <PrivateRoute>
+                      <CadastroParticipante />
+                  </PrivateRoute>
+              }
+          />
+          <Route
+              path="/participantes/editar/:id"
+              element={
+                  <PrivateRoute>
+                      <EditarParticipante />
+                  </PrivateRoute>
+              }
+          />
+          <Route
+              path="/participantes"
+              element={
+                  <PrivateRoute>
+                      <GerenciarParticipantes />
+                  </PrivateRoute>
+              }
+          />
+          <Route
+              path="/participantes/cadastro"
+              element={
+                  <PrivateRoute>
+                      <CadastroParticipante />
+                  </PrivateRoute>
+              }
+          />
+          <Route
+              path="/participantes/editar/:id"
+              element={
+                  <PrivateRoute>
+                      <EditarParticipante />
+                  </PrivateRoute>
+              }
+          />
         <Route
           path="/"
           element={

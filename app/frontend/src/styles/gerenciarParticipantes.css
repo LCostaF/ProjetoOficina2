@@ -1,0 +1,158 @@
+.gerenciar-participantes-container {
+    min-height: 100vh;
+    background-color: #f8fafc;
+    padding: 32px;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--ellp-dark);
+}
+
+.gerenciar-participantes-container.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.1rem;
+    color: var(--ellp-gray);
+}
+
+.gerenciar-participantes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.gerenciar-participantes-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+.gerenciar-participantes-header h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--ellp-dark);
+    white-space: nowrap;
+}
+
+.gerenciar-participantes-header .create-button {
+    margin-left: auto;
+    z-index: 10;
+}
+
+.back-button, .create-button {
+
+}
+
+.participantes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.participante-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.participante-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.participante-card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.participante-card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--ellp-dark);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.participante-card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #5a677b;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.participante-card-details span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.participante-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.action-button, .edit-button, .delete-button {
+
+}
+
+.no-participantes-message {
+    text-align: center;
+    color: var(--ellp-gray);
+    font-size: 1.1rem;
+    padding: 50px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .gerenciar-participantes-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .gerenciar-participantes-header .header-left {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .gerenciar-participantes-header h2 {
+        position: static;
+        transform: none;
+        text-align: left;
+        width: 100%;
+    }
+}
