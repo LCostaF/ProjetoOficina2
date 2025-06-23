@@ -1,3 +1,4 @@
+// app/frontend/src/router/index.jsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "@/pages/Login";
 import Home from "@/pages/Home";
@@ -9,6 +10,8 @@ import EditarOficina from "@/pages/EditarOficina";
 import GerenciarParticipantes from "@/pages/GerenciarParticipantes";
 import CadastroParticipante from "@/pages/CadastroParticipante";
 import EditarParticipante from "@/pages/EditarParticipante";
+import RegistroPresenca from "@/pages/RegistroPresenca";
+import GerenciarInscricoes from "@/pages/GerenciarInscricoes";
 import { useAuth } from "@/hooks/useAuth";
 
 function PrivateRoute({ children }) {
@@ -72,54 +75,46 @@ export default function Router() {
             </PrivateRoute>
           }
         />
-          <Route
-              path="/participantes"
-              element={
-                  <PrivateRoute>
-                      <GerenciarParticipantes />
-                  </PrivateRoute>
-              }
-          />
-          <Route
-              path="/participantes/cadastro"
-              element={
-                  <PrivateRoute>
-                      <CadastroParticipante />
-                  </PrivateRoute>
-              }
-          />
-          <Route
-              path="/participantes/editar/:id"
-              element={
-                  <PrivateRoute>
-                      <EditarParticipante />
-                  </PrivateRoute>
-              }
-          />
-          <Route
-              path="/participantes"
-              element={
-                  <PrivateRoute>
-                      <GerenciarParticipantes />
-                  </PrivateRoute>
-              }
-          />
-          <Route
-              path="/participantes/cadastro"
-              element={
-                  <PrivateRoute>
-                      <CadastroParticipante />
-                  </PrivateRoute>
-              }
-          />
-          <Route
-              path="/participantes/editar/:id"
-              element={
-                  <PrivateRoute>
-                      <EditarParticipante />
-                  </PrivateRoute>
-              }
-          />
+        <Route
+          path="/participantes"
+          element={
+            <PrivateRoute>
+              <GerenciarParticipantes />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/participantes/cadastro"
+          element={
+            <PrivateRoute>
+              <CadastroParticipante />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/participantes/editar/:id"
+          element={
+            <PrivateRoute>
+              <EditarParticipante />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/inscricoes"
+          element={
+            <PrivateRoute>
+              <GerenciarInscricoes />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/presencas"
+          element={
+            <PrivateRoute>
+              <RegistroPresenca />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/"
           element={

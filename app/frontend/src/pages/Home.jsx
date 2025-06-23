@@ -2,7 +2,7 @@ import { auth } from "@/services/firebase";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
-import { FiLogOut, FiUsers, FiCalendar, FiClipboard, FiChevronRight } from "react-icons/fi";
+import { FiLogOut, FiUsers, FiCalendar, FiClipboard, FiChevronRight, FiUserPlus } from "react-icons/fi";
 import "@/styles/home.css";
 import "@/styles/global.css";
 
@@ -97,14 +97,27 @@ export default function Dashboard() {
 
           <div className="dashboard-card">
             <div className="card-icon">
-              <FiClipboard />
+              <FiUserPlus /> {/* Ou outro ícone, como FiLink */}
             </div>
-            <h3 className="card-title">Registro de Presença</h3>
+            <h3 className="card-title">Gerenciar Inscrições</h3>
+            <p className="card-description">
+              Associe participantes a oficinas específicas.
+            </p>
+            <a onClick={() => navigate("/inscricoes")} className="card-link" style={{ cursor: 'pointer' }}>
+              Gerenciar inscrições <FiChevronRight size={14} />
+            </a>
+          </div>
+
+          <div className="dashboard-card">
+            <div className="card-icon">
+              <FiClipboard /> {/* Ou outro ícone adequado */}
+            </div>
+            <h3 className="card-title">Registrar Presença</h3>
             <p className="card-description">
               Registre a presença dos participantes nas oficinas.
             </p>
-            <a href="#" className="card-link">
-              Registrar presença <FiChevronRight size={14} />
+            <a onClick={() => navigate("/presencas")} className="card-link" style={{ cursor: 'pointer' }}>
+              Acessar <FiChevronRight size={14} />
             </a>
           </div>
         </div>

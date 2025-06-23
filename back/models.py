@@ -39,25 +39,33 @@ class Participante(ParticipanteBase):
     class Config:
         orm_mode = True
 
-class PresencaBase(BaseModel):
+class InscricaoBase(BaseModel):
     participante_id: str
     oficina_id: str
-    presente: bool = False
+
+class InscricaoCreate(InscricaoBase):
+    pass
+
+class Inscricao(InscricaoBase):
+    id: str
+    data_inscricao: datetime
+    inscrito_por: str
+    
+    class Config:
+        orm_mode = True
+
+class PresencaBase(BaseModel):
+    oficina_id: str
+    data: str  # formato ISO (YYYY-MM-DD)
+    participantes_presentes: List[str]
 
 class PresencaCreate(PresencaBase):
     pass
 
 class Presenca(PresencaBase):
     id: str
-    data_registro: datetime
     registrado_por: str
+    data_registro: datetime
     
     class Config:
         orm_mode = True
-
-class RelatorioOficina(BaseModel):
-    oficina: Oficina
-    total_participantes: int
-    presentes: int
-    ausentes: int
-    taxa_presenca: float

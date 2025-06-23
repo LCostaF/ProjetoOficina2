@@ -8,26 +8,34 @@ export const useApi = () => {
   const context = useContext(ApiContext);
 
   if (!context) {
+    console.error("ApiContext não encontrado. Verifique se ApiProvider está envolvendo seu componente.");
     throw new Error("useApi deve ser usado dentro de um ApiProvider");
   }
   return {
     api: context.apiClient,
     isLoading: context.isLoading,
     error: context.error,
-    isInitialized: context.isInitialized,
     isReady: context.isReady,
+    loadingApi: context.loadingApi,
   };
 };
 
 export function ApiProvider({ children }) {
-  const { user, token, refreshToken } = useAuth();
+  const { user, token, loading: authLoading, refreshToken } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [apiClient, setApiClient] = useState(null);
+  const [loadingApi, setLoadingApi] = useState(true);
 
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "https://api.ellp-exemplo.com/api";
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const createApiClient = useCallback(() => {
+    logger.debug("createApiClient: Construindo ou reconstruindo cliente API.", {
+      tokenPresent: !!token,
+      userPresent: !!user,
+      authLoadingState: authLoading
+    });
+
     const internalFetchWithAuth = async (endpoint, options = {}) => {
       setIsLoading(true);
       setError(null);
@@ -38,14 +46,14 @@ export function ApiProvider({ children }) {
       };
 
       if (token) {
+        logger.api(`[API FETCH] Usando token: ${token.substring(0, 10)}...`);
         headers["Authorization"] = `Bearer ${token}`;
-        logger.api(`Cliente API: Adicionando token de autenticação: ${token.substring(0, 10)}...`);
       } else {
-        logger.api("Cliente API: Sem token disponível.");
+        logger.api("[API FETCH] Sem token disponível para esta requisição.");
       }
 
       const url = `${apiBaseUrl}${endpoint}`;
-      logger.api(`Cliente API: Requisição para ${url}`, { method: options.method || 'GET' });
+      logger.api(`[API FETCH] Iniciando requisição para ${url}`, { method: options.method || 'GET' });
 
       let response;
       try {
@@ -54,35 +62,40 @@ export function ApiProvider({ children }) {
           headers,
         });
 
-        if (response.status === 401 && refreshToken) {
-          logger.warn("Cliente API: Token expirado/inválido. Tentando refresh...");
+        if (response.status === 401 && refreshToken && user) {
+          logger.warn("[API FETCH] Token expirado/inválido. Tentando refresh.");
           const newToken = await refreshToken();
           if (newToken) {
             headers.Authorization = `Bearer ${newToken}`;
-            logger.info("Cliente API: Token atualizado. Retentando requisição...");
+            logger.info("[API FETCH] Token refrescado. Retentando requisição.");
             response = await fetch(url, {
               ...options,
               headers,
             });
           } else {
-            logger.error("Cliente API: Falha ao atualizar token. Redirecionando para login.");
+            logger.error("[API FETCH] Falha ao refrescar token. Sessão expirada.");
             throw new Error("Sessão expirada. Por favor, faça login novamente.");
           }
         }
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.detail || errorData.message || `Request failed with status ${response.status}`);
+          const errorMessage = errorData.detail || errorData.message || `Request failed with status ${response.status}`;
+          logger.error(`[API FETCH] Erro na resposta: ${errorMessage}`, errorData);
+          throw new Error(errorMessage);
         }
 
         if (response.status === 204 || options.method === "DELETE") {
+          logger.api(`[API FETCH] Requisição ${options.method} para ${url} concluída com 204.`);
           return {};
         }
 
-        return response.json();
+        const data = await response.json();
+        logger.api(`[API FETCH] Requisição para ${url} concluída com sucesso.`, data);
+        return data;
       } catch (err) {
         setError(err.message);
-        logger.error("Cliente API: Falha na requisição", err);
+        logger.error("[API FETCH] Erro na execução da requisição:", err);
         throw err;
       } finally {
         setIsLoading(false);
@@ -93,10 +106,7 @@ export function ApiProvider({ children }) {
       oficinas: {
         getAll: () => internalFetchWithAuth("/oficinas"),
         getById: (id) => internalFetchWithAuth(`/oficinas/${id}`),
-        create: (data) => internalFetchWithAuth("/oficinas", {
-          method: "POST",
-          body: JSON.stringify(data),
-        }),
+        create: (data) => internalFetchWithAuth("/oficinas", { method: "POST", body: JSON.stringify(data) }),
         listarOficinas: (filters = {}) => {
           const params = new URLSearchParams();
           if (filters.dataInicio) params.append('data_inicio', filters.dataInicio);
@@ -106,70 +116,90 @@ export function ApiProvider({ children }) {
           return internalFetchWithAuth(`/oficinas${queryString}`, { method: 'GET' });
         },
         obterOficina: (oficinaId) => internalFetchWithAuth(`/oficinas/${oficinaId}`, { method: 'GET' }),
-        update: (id, data) => internalFetchWithAuth(`/oficinas/${id}`, {
-          method: "PUT",
-          body: JSON.stringify(data),
-        }),
-        delete: (id) => internalFetchWithAuth(`/oficinas/${id}`, {
-          method: "DELETE",
-        }),
-        criarOficina: (oficinaData) => internalFetchWithAuth('/oficinas/', {
-          method: 'POST',
-          body: JSON.stringify(oficinaData),
-        }),
+        update: (id, data) => internalFetchWithAuth(`/oficinas/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+        delete: (id) => internalFetchWithAuth(`/oficinas/${id}`, { method: "DELETE" }),
+        criarOficina: (oficinaData) => internalFetchWithAuth('/oficinas/', { method: 'POST', body: JSON.stringify(oficinaData) }),
       },
-      
+
       participantes: {
         getAll: () => internalFetchWithAuth("/participantes"),
         getById: (id) => internalFetchWithAuth(`/participantes/${id}`),
-        create: (data) => internalFetchWithAuth("/participantes", {
+        create: (data) => internalFetchWithAuth("/participantes", { method: "POST", body: JSON.stringify(data) }),
+        update: (id, data) => internalFetchWithAuth(`/participantes/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+        delete: (id) => internalFetchWithAuth(`/participantes/${id}`, { method: "DELETE" }),
+      },
+
+      inscricoes: {
+        inscrever: (oficinaId, participanteId) => internalFetchWithAuth("/inscricoes/", {
           method: "POST",
-          body: JSON.stringify(data),
+          body: JSON.stringify({ oficina_id: oficinaId, participante_id: participanteId }),
         }),
-        update: (id, data) => internalFetchWithAuth(`/participantes/${id}`, {
-          method: "PUT",
-          body: JSON.stringify(data),
-        }),
-        delete: (id) => internalFetchWithAuth(`/participantes/${id}`, {
+        listarParticipantesInscritos: (oficinaId) => internalFetchWithAuth(`/inscricoes/oficina/${oficinaId}/participantes`),
+        listarOficinasInscritas: (participanteId) => internalFetchWithAuth(`/inscricoes/participante/${participanteId}/oficinas`),
+        removerInscricao: (inscricaoId) => internalFetchWithAuth(`/inscricoes/${inscricaoId}`, {
           method: "DELETE",
         }),
       },
 
-      presenca: {
-        getByOficina: (oficinaId) => internalFetchWithAuth(`/presenca/oficina/${oficinaId}`),
-        registrar: (oficinaId, participanteId, presente) => internalFetchWithAuth("/presenca", {
-          method: "POST",
-          body: JSON.stringify({ oficinaId, participanteId, presente }),
-        }),
-      },
-
-      relatorios: {
-        presencaPorOficina: (oficinaId) => internalFetchWithAuth(`/relatorios/presenca/${oficinaId}`),
-        participantesPorPeriodo: (dataInicio, dataFim) => internalFetchWithAuth(`/relatorios/participantes?inicio=${dataInicio}&fim=${dataFim}`),
-      },
+      presencas: {
+        registrar: (oficinaId, data, participantesIds) =>
+          internalFetchWithAuth("/presencas", {
+            method: "POST",
+            body: JSON.stringify({
+              oficina_id: oficinaId,
+              data,
+              participantes_presentes: participantesIds
+            })
+          }),
+        listarPorOficina: (oficinaId) =>
+          internalFetchWithAuth(`/presencas/oficina/${oficinaId}`)
+      }
     };
-  }, [token, refreshToken, apiBaseUrl]);
+  }, [token, refreshToken, apiBaseUrl, user]);
 
   useEffect(() => {
-    if (token || user === null) {
-      const client = createApiClient();
-      setApiClient(client);
+    logger.debug("ApiProvider useEffect de inicialização: Estado de autenticação mudou.", {
+      authLoading,
+      user: user ? user.uid : 'null',
+      token: token ? `${token.substring(0, 10)}...` : 'null',
+    });
+
+    setLoadingApi(true);
+
+    if (authLoading) {
+      setApiClient(null);
+      return;
     }
-  }, [token, user, createApiClient]);
+
+    if (user === null) {
+      logger.info("ApiProvider: Usuário não logado. Criando apiClient para acesso público.");
+      setApiClient(createApiClient());
+      setLoadingApi(false);
+    } else if (user && token) {
+      logger.info("ApiProvider: Usuário logado e token disponível. Criando apiClient autenticado.");
+      setApiClient(createApiClient());
+      setLoadingApi(false);
+    } else {
+      logger.warn("ApiProvider: Usuário logado, mas token indisponível. Mantendo apiClient nulo e API em loading.");
+      setApiClient(null);
+    }
+
+  }, [authLoading, user, token, createApiClient]);
 
   const contextValue = useMemo(() => ({
     apiClient,
     isLoading,
     error,
-    isInitialized: true,
-    isReady: !!apiClient,
-  }), [apiClient, isLoading, error]);
+    isReady: !loadingApi && !!apiClient,
+    loadingApi: loadingApi
+  }), [apiClient, isLoading, error, loadingApi]);
 
-  logger.debug("ApiProvider: Renderizando com estado", {
-    inicializado: contextValue.isInitialized,
-    carregando: contextValue.isLoading,
+  logger.debug("ApiProvider: Renderizando com estado final do contexto.", {
+    carregandoApi: contextValue.loadingApi,
+    carregandoRequisicao: contextValue.isLoading,
     temErro: !!contextValue.error,
-    pronto: contextValue.isReady
+    prontoParaUso: contextValue.isReady,
+    apiClientDefined: !!contextValue.apiClient
   });
 
   return (

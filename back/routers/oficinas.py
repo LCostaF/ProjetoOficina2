@@ -4,12 +4,11 @@ from typing import List, Optional
 from datetime import date, datetime
 
 from database import (
-    oficinas_ref, 
-    get_oficina_by_titulo_data, 
-    to_dict, 
+    oficinas_ref,
+    get_oficina_by_titulo_data,
+    to_dict,
     add_timestamp,
-    get_oficinas_by_instrutor,
-    get_presencas_by_oficina
+    get_oficinas_by_instrutor
 )
 
 from models import OficinaCreate, OficinaBase
@@ -184,13 +183,6 @@ async def excluir_oficina(
     oficina_ref = oficinas_ref.document(oficina_id)
     if not oficina_ref.get().exists:
         raise HTTPException(status_code=404, detail="Workshop not found")
-
-    presencas_associadas = await get_presencas_by_oficina(oficina_id)
-    if presencas_associadas:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Não é possível excluir esta oficina: existem registros de presença associados."
-        )
 
     oficina_ref.delete()
     return {"message": "Workshop deleted successfully"}

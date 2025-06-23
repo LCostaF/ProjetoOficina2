@@ -1,0 +1,332 @@
+.registro-presenca-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+    padding: 20px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.registro-presenca-card {
+    width: 100%;
+    max-width: 900px; /* Ajuste para ter mais espaço */
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+}
+
+.registro-presenca-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.registro-presenca-header h2 {
+    color: var(--ellp-dark);
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.registro-presenca-header p {
+    color: var(--ellp-gray);
+    font-size: 1rem;
+}
+
+.registro-presenca-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.select-oficina {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 1rem;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.select-oficina:focus {
+    outline: none;
+    border-color: var(--ellp-blue);
+    box-shadow: 0 0 0 2px rgba(12, 163, 210, 0.2);
+}
+
+.search-bar {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 12px 12px 40px; /* Aumenta o padding para o ícone */
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: var(--ellp-blue);
+    box-shadow: 0 0 0 2px rgba(12, 163, 210, 0.2);
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ellp-gray);
+}
+
+.participantes-table-container {
+    max-height: 400px; /* Altura máxima para a tabela com scroll */
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.participantes-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.participantes-table th, .participantes-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.participantes-table th {
+    background-color: var(--ellp-blue-lighter);
+    color: var(--ellp-dark);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 2; /* Garante que o cabeçalho fique por cima no scroll */
+}
+
+.participantes-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.participantes-table td {
+    color: var(--ellp-dark);
+    background-color: white; /* Garante que o fundo da célula é branco */
+}
+
+.participantes-table tr:hover td {
+    background-color: #f8fafc;
+}
+
+.participantes-table input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+    margin: 0; /* Remove margem padrão */
+}
+
+/* Estilo para a coluna do dia atual */
+.today-column {
+    background-color: #d1f7e0 !important; /* Cor mais clara para o cabeçalho do dia atual */
+    color: #28a745 !important; /* Cor de texto verde */
+    font-weight: bold !important;
+}
+
+.today-cell {
+    background-color: #e6ffe6; /* Fundo suave para a célula do dia atual */
+}
+
+.today-badge {
+    font-size: 0.75rem;
+    font-weight: normal;
+    background-color: #28a745;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+
+.no-results-message, .no-participantes-message {
+    text-align: center;
+    color: var(--ellp-gray);
+    font-size: 1.1rem;
+    padding: 50px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.1rem;
+    color: var(--ellp-gray);
+    padding: 30px 0;
+}
+
+.registro-presenca-footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--ellp-gray);
+}
+
+.registro-presenca-footer a {
+    color: var(--ellp-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.registro-presenca-footer a:hover {
+    text-decoration: underline;
+}
+
+.no-oficina-selected-message {
+    text-align: center;
+    color: var(--ellp-gray);
+    font-size: 1.1rem;
+    padding: 30px;
+    background-color: #f0f4f8; /* Um fundo suave para destaque */
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.date-input-wrapper {
+  position: relative;
+}
+
+.date-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  padding-left: 40px;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: var(--ellp-blue);
+  box-shadow: 0 0 0 2px rgba(12, 163, 210, 0.2);
+}
+
+.date-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ellp-gray);
+}
+
+.presenca-button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+}
+
+.presenca-button.presente {
+  background-color: #d1f7e0;
+  color: #28a745;
+}
+
+.presenca-button.ausente {
+  background-color: #fee2e2;
+  color: var(--ellp-red);
+}
+
+.presenca-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.back-button {
+  background-color: #e2e8f0;
+  color: var(--ellp-dark);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-button:hover {
+  background-color: #cbd5e0;
+}
+
+.back-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.submit-button {
+  background-color: var(--ellp-blue);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  box-shadow: 0 4px 10px rgba(12, 163, 210, 0.2);
+}
+
+.submit-button:hover {
+  background-color: #0991bc;
+  transform: translateY(-2px);
+}
+
+.submit-button:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .registro-presenca-card {
+        padding: 30px 20px;
+    }
+
+    .participantes-table-container {
+        overflow-x: auto; /* Adiciona scroll horizontal em telas menores */
+    }
+
+    .participantes-table {
+        min-width: 600px; /* Garante que a tabela não fique muito pequena */
+    }
+
+    .registro-presenca-header h2 {
+        font-size: 1.5rem;
+    }
+}

@@ -1,0 +1,285 @@
+/* app/frontend/src/styles/gerenciarInscricoes.css */
+
+.gerenciar-inscricoes-container {
+    min-height: 100vh;
+    background-color: #f8fafc;
+    padding: 32px;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--ellp-dark);
+}
+
+.gerenciar-inscricoes-container.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.1rem;
+    color: var(--ellp-gray);
+}
+
+.gerenciar-inscricoes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.gerenciar-inscricoes-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+.gerenciar-inscricoes-header h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--ellp-dark);
+    white-space: nowrap;
+}
+
+.back-button {
+    background: none;
+    border: 1px solid #e2e8f0;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ellp-dark);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: #f1f5f9;
+}
+
+.inscricao-section {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+}
+
+.inscricao-section h3 {
+    font-size: 1.5rem;
+    color: var(--ellp-dark);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--ellp-dark);
+}
+
+.select-oficina, .select-participante {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 1rem;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.select-oficina:focus, .select-participante:focus, .search-input:focus {
+    outline: none;
+    border-color: var(--ellp-blue);
+    box-shadow: 0 0 0 2px rgba(12, 163, 210, 0.2);
+}
+
+.search-and-select-group {
+    display: flex;
+    gap: 10px;
+    align-items: stretch; /* Garante que os elementos tenham a mesma altura */
+    flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+}
+
+.search-input {
+    flex: 2; /* Ocupa mais espaço que o select */
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    min-width: 150px; /* Garante tamanho mínimo em telas menores */
+}
+
+.select-participante {
+    flex: 3; /* Ocupa ainda mais espaço */
+    min-width: 200px;
+}
+
+.add-button {
+    background-color: var(--ellp-blue);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(12, 163, 210, 0.2);
+    white-space: nowrap; /* Evita que o texto quebre */
+}
+
+.add-button:hover {
+    background-color: #0991bc;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(12, 163, 210, 0.3);
+}
+
+.add-button:disabled {
+    background-color: #cbd5e0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+
+.section-title {
+    font-size: 1.2rem;
+    color: var(--ellp-dark);
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.no-data-message {
+    text-align: center;
+    color: var(--ellp-gray);
+    font-size: 1rem;
+    padding: 20px;
+    border: 1px dashed #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.inscritos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px; /* Limita a altura para scroll */
+    overflow-y: auto;
+    padding-right: 5px; /* Para espaço do scrollbar */
+}
+
+.inscrito-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f4f8;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.95rem;
+    color: var(--ellp-dark);
+}
+
+.inscrito-item span {
+    flex-grow: 1;
+    margin-right: 15px;
+    font-weight: 500;
+}
+
+.remove-button {
+    background-color: #fee2e2;
+    color: var(--ellp-red);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.remove-button:hover {
+    background-color: #fbdada;
+    transform: translateY(-1px);
+}
+
+.remove-button:disabled {
+    background-color: #e2e8f0;
+    color: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.loading-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    color: var(--ellp-gray);
+    padding: 20px 0;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .gerenciar-inscricoes-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 15px 20px;
+    }
+
+    .gerenciar-inscricoes-header h2 {
+        position: static;
+        transform: none;
+        text-align: left;
+        width: 100%;
+        font-size: 1.5rem;
+    }
+
+    .inscricao-section {
+        padding: 20px;
+    }
+
+    .search-and-select-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-input, .select-participante, .add-button {
+        width: 100%;
+        min-width: unset;
+    }
+}
