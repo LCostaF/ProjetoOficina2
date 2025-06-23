@@ -23,7 +23,7 @@ export default function RegistroPresenca() {
     const [success, setSuccess] = useState("");
     const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
 
-    // Carregar oficinas
+    // Carregar oficinas (sem alterações aqui)
     useEffect(() => {
         const fetchOficinas = async () => {
             setLoading(true);
@@ -44,9 +44,9 @@ export default function RegistroPresenca() {
         }
     }, [api, isReady]);
 
-    // Carregar participantes inscritos quando selecionar uma oficina
+    // LÓGICA ATUALIZADA AQUI: Carregar participantes E presenças existentes
     useEffect(() => {
-        const fetchParticipantesInscritos = async () => {
+        const fetchDadosDaOficina = async () => {
             if (!selectedOficinaId) {
                 setParticipantesInscritos([]);
                 return;
@@ -54,40 +54,54 @@ export default function RegistroPresenca() {
 
             setLoading(true);
             setError("");
-            try {
-                const data = await api.inscricoes.listarParticipantesInscritos(selectedOficinaId);
+            setSuccess(""); // Limpa a mensagem de sucesso ao trocar de oficina/data
 
-                // Adiciona campo para controle de presença
-                const participantesComPresenca = data.map(participante => ({
+            try {
+                // 1. Busca a lista de todos os participantes inscritos na oficina
+                const promiseInscritos = api.inscricoes.listarParticipantesInscritos(selectedOficinaId);
+                
+                // 2. Busca o registro de presença para a data selecionada
+                const promisePresenca = api.presencas.obterPorOficinaEData(selectedOficinaId, currentDate);
+
+                // Executa as duas buscas em paralelo
+                const [listaDeInscritos, dadosPresencaExistente] = await Promise.all([promiseInscritos, promisePresenca]);
+
+                // 3. Cria um Set com os IDs dos participantes presentes para busca rápida
+                const presentesIds = new Set(dadosPresencaExistente?.participantes_presentes || []);
+
+                // 4. Combina as informações: marca como presente quem estiver na lista
+                const participantesComPresenca = listaDeInscritos.map(participante => ({
                     ...participante,
-                    presente: false // Inicialmente todos como não presentes
+                    presente: presentesIds.has(participante.id) // Verifica se o ID está no Set
                 }));
 
                 setParticipantesInscritos(participantesComPresenca);
+
             } catch (err) {
-                console.error("Erro ao carregar participantes inscritos:", err);
-                setError("Erro ao carregar participantes. Tente novamente.");
+                console.error("Erro ao carregar dados da oficina:", err);
+                setError("Erro ao carregar participantes ou presenças. Tente novamente.");
+                setParticipantesInscritos([]); // Limpa em caso de erro
             } finally {
                 setLoading(false);
             }
         };
 
         if (isReady && selectedOficinaId) {
-            fetchParticipantesInscritos();
+            fetchDadosDaOficina();
         }
-    }, [api, isReady, selectedOficinaId]);
+    // Adicionamos 'currentDate' para que a busca seja refeita quando a data mudar
+    }, [api, isReady, selectedOficinaId, currentDate]);
 
-    // Filtrar participantes pelo termo de busca
+    // Filtrar participantes (sem alterações aqui)
     const filteredParticipantes = useMemo(() => {
         if (!searchTerm) return participantesInscritos;
-
         return participantesInscritos.filter(p =>
             p.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (p.cpf && p.cpf.includes(searchTerm))
         );
     }, [participantesInscritos, searchTerm]);
 
-    // Alternar presença de um participante
+    // Alternar presença (sem alterações aqui)
     const togglePresenca = (participanteId) => {
         setParticipantesInscritos(prev =>
             prev.map(p =>
@@ -96,7 +110,7 @@ export default function RegistroPresenca() {
         );
     };
 
-    // Registrar presenças
+    // Registrar presenças (pequena alteração na mensagem de sucesso)
     const registrarPresencas = async () => {
         if (!selectedOficinaId) {
             setError("Selecione uma oficina antes de registrar presenças.");
@@ -107,30 +121,24 @@ export default function RegistroPresenca() {
             .filter(p => p.presente)
             .map(p => p.id);
 
-        if (participantesPresentes.length === 0) {
-            setError("Selecione pelo menos um participante presente.");
-            return;
-        }
-
         setLoading(true);
         setError("");
+        setSuccess("");
 
         try {
-            await api.presencas.registrar(selectedOficinaId, currentDate, participantesPresentes);
+            const response = await api.presencas.registrar(selectedOficinaId, currentDate, participantesPresentes);
 
-            setSuccess(`Presenças registradas para ${participantesPresentes.length} participantes!`);
+            setSuccess(response.message); // Usa a mensagem da API (Registrada ou Atualizada)
 
             MySwal.fire({
                 title: 'Sucesso!',
-                text: `Presenças registradas para ${participantesPresentes.length} participantes.`,
+                text: response.message,
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
-
-            // Limpar seleção após registro
-            setParticipantesInscritos(prev =>
-                prev.map(p => ({ ...p, presente: false }))
-            );
+            
+            // Não limpamos mais a seleção, pois o estado agora reflete o que foi salvo.
+            // Apenas para garantir que o loading pare.
 
         } catch (err) {
             console.error("Erro ao registrar presenças:", err);
@@ -139,7 +147,8 @@ export default function RegistroPresenca() {
             setLoading(false);
         }
     };
-
+    
+    // O resto do componente JSX permanece o mesmo...
     return (
         <div className="registro-presenca-container">
             <div className="registro-presenca-card">
@@ -147,7 +156,6 @@ export default function RegistroPresenca() {
                     <h2>Registrar Presença</h2>
                     <p>Selecione uma oficina e marque os participantes presentes</p>
                 </div>
-
                 <div className="registro-presenca-form">
                     <div className="form-group">
                         <label htmlFor="oficinaSelect">Selecionar Oficina</label>
@@ -161,7 +169,7 @@ export default function RegistroPresenca() {
                             <option value="">-- Selecione uma Oficina --</option>
                             {oficinas.map((oficina) => (
                                 <option key={oficina.id} value={oficina.id}>
-                                    {oficina.titulo} - {oficina.data}
+                                    {oficina.titulo} - {new Date(oficina.data + 'T00:00:00').toLocaleDateString('pt-BR')}
                                 </option>
                             ))}
                         </select>
@@ -180,7 +188,6 @@ export default function RegistroPresenca() {
                                         className="date-input"
                                         disabled={loading}
                                     />
-                                    <FiCalendar className="date-icon" />
                                 </div>
                             </div>
 
@@ -198,7 +205,7 @@ export default function RegistroPresenca() {
                             {loading ? (
                                 <div className="loading-indicator">
                                     <span className="spinner"></span>
-                                    <p>Carregando participantes...</p>
+                                    <p>Carregando dados...</p>
                                 </div>
                             ) : participantesInscritos.length === 0 ? (
                                 <p className="no-participantes-message">
@@ -255,12 +262,12 @@ export default function RegistroPresenca() {
                                     type="button"
                                     onClick={registrarPresencas}
                                     className="submit-button"
-                                    disabled={loading || participantesInscritos.filter(p => p.presente).length === 0}
+                                    disabled={loading || apiLoading}
                                 >
                                     {loading ? (
                                         <span className="spinner"></span>
                                     ) : (
-                                        'Registrar Presenças'
+                                        'Salvar Presenças' // Texto alterado para mais clareza
                                     )}
                                 </button>
                             </div>

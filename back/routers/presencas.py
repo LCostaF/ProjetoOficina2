@@ -1,5 +1,5 @@
 # back/routers/presencas.py
-from typing import List
+from typing import List, Optional # Adicione Optional
 from fastapi import APIRouter, HTTPException, Depends, status, Header
 from datetime import datetime
 from firebase_admin import firestore, auth
@@ -30,37 +30,82 @@ async def verify_firebase_token(authorization: str = Header(...)):
         )
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def registrar_presenca(
+async def registrar_ou_atualizar_presenca( # Nome da função atualizado para clareza
     presenca: PresencaCreate,
     user: dict = Depends(verify_firebase_token)
 ):
-    """Registra presenças para uma oficina"""
+    """
+    Registra ou atualiza presenças para uma oficina em uma data específica.
+    Se já existir um registro para o dia, ele é atualizado.
+    Caso contrário, um novo é criado.
+    """
     try:
+        data_iso = datetime.fromisoformat(presenca.data).date().isoformat()
+        
+        # Procura por um registro de presença existente para esta oficina e data
+        query = presencas_ref.where('oficina_id', '==', presenca.oficina_id) \
+                            .where('data', '==', data_iso) \
+                            .limit(1)
+        
+        docs = list(query.stream())
+        
         presenca_dict = presenca.dict()
-        presenca_dict = add_timestamp(presenca_dict)
+        presenca_dict['data'] = data_iso
         presenca_dict['registrado_por'] = user['uid']
         
-        # Converte a string de data para timestamp
-        presenca_dict['data'] = datetime.fromisoformat(presenca.data).date().isoformat()
-        
-        _, doc_ref = presencas_ref.add(presenca_dict)
-        
-        return {
-            "message": "Presenças registradas com sucesso",
-            "id": doc_ref.id
-        }
+        if docs:
+            # Atualiza o documento existente
+            doc_ref = docs[0].reference
+            update_data = add_timestamp(presenca_dict, update=True)
+            doc_ref.update(update_data)
+            return {
+                "message": "Presenças atualizadas com sucesso",
+                "id": doc_ref.id
+            }
+        else:
+            # Cria um novo documento
+            insert_data = add_timestamp(presenca_dict)
+            _, doc_ref = presencas_ref.add(insert_data)
+            return {
+                "message": "Presenças registradas com sucesso",
+                "id": doc_ref.id
+            }
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Erro ao registrar presenças: {str(e)}"
+            detail=f"Erro ao processar presenças: {str(e)}"
         )
+
+# NOVO ENDPOINT para buscar presença por data
+@router.get("/oficina/{oficina_id}/data/{data_iso}", response_model=Optional[dict])
+async def obter_presenca_por_data(
+    oficina_id: str,
+    data_iso: str, # Formato YYYY-MM-DD
+    user: dict = Depends(verify_firebase_token)
+):
+    """Obtém um registro de presença de uma oficina em uma data específica."""
+    try:
+        query = presencas_ref.where('oficina_id', '==', oficina_id) \
+                            .where('data', '==', data_iso) \
+                            .limit(1)
+        docs = list(query.stream())
+        if docs:
+            return to_dict(docs[0])
+        return None # Retorna null se não encontrar
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Erro ao buscar presença: {str(e)}"
+        )
+
 
 @router.get("/oficina/{oficina_id}", response_model=List[dict])
 async def listar_presencas_por_oficina(
     oficina_id: str,
     user: dict = Depends(verify_firebase_token)
 ):
-    """Lista registros de presença por oficina"""
+    """Lista TODOS os registros de presença por oficina"""
     try:
         query = presencas_ref.where('oficina_id', '==', oficina_id).stream()
         return [to_dict(doc) for doc in query]

@@ -152,7 +152,10 @@ export function ApiProvider({ children }) {
             })
           }),
         listarPorOficina: (oficinaId) =>
-          internalFetchWithAuth(`/presencas/oficina/${oficinaId}`)
+          internalFetchWithAuth(`/presencas/oficina/${oficinaId}`),
+        // NOVA FUNÇÃO AQUI
+        obterPorOficinaEData: (oficinaId, data) =>
+          internalFetchWithAuth(`/presencas/oficina/${oficinaId}/data/${data}`)
       }
     };
   }, [token, refreshToken, apiBaseUrl, user]);
