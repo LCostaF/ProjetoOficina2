@@ -1,7 +1,7 @@
 # Sistema de Registro de Presença - ELLP
 
 ## Visão Geral
-O Sistema de Registro de Presença ELLP é uma plataforma web desenvolvida para gerenciar oficinas, participantes, inscrições e registros de presença do projeto de extensão ELLP (Ensino Lúdico de Lógica e Programação) da UTFPR.
+O Sistema de Registro de Presença ELLP é uma plataforma web desenvolvida para gerenciar oficinas, participantes, inscrições e registros de presença do projeto de extensão ELLP (Ensino Lúdico de Lógica e Programação) da UTFPR. O documento de planejamento do projeto pode ser encontrado no diretório `docs` deste repositório, ou acessado diretamente clicando [aqui](https://github.com/LCostaF/ProjetoOficina2/blob/main/docs/README.md).
 
 ## Tecnologias Utilizadas
 ### Frontend
