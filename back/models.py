@@ -9,7 +9,7 @@ class OficinaBase(BaseModel):
     hora_inicio: str
     hora_fim: str
     local: str = Field(..., min_length=3, max_length=100)
-    imagem_url: Optional[str] = Field(None, description="URL da imagem da oficina") # NOVO CAMPO
+    imagem_url: Optional[str] = Field(None, description="URL da imagem da oficina")
 
 class OficinaCreate(OficinaBase):
     pass
@@ -18,7 +18,6 @@ class Oficina(OficinaBase):
     id: str
     instrutores: List[str] = []
     data_criacao: datetime
-    # data_atualizacao: Optional[datetime] # Adicione se quiser um campo de atualização
 
     class Config:
         orm_mode = True

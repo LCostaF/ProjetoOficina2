@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 import "@/styles/global.css";
-import "@/styles/gerenciarParticipantes.css"; // Usaremos um CSS novo e similar
+import "@/styles/gerenciarParticipantes.css";
 
 const MySwal = withReactContent(Swal);
 
@@ -21,7 +21,6 @@ export default function GerenciarParticipantes() {
         setLoadingParticipantes(true);
         setErrorMessage("");
         try {
-            // Usando a função getAll do apiService para participantes
             const data = await api.participantes.getAll();
             setParticipantes(data);
         } catch (err) {

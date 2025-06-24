@@ -1,4 +1,3 @@
-# back/routers/inscricoes.py
 from fastapi import APIRouter, HTTPException, Depends, status, Header
 from typing import List
 from datetime import datetime
@@ -9,12 +8,11 @@ from database import (
     participantes_ref,
     oficinas_ref,
     get_inscricao,
-    get_participantes_by_oficina, # Nova importação
-    get_oficinas_by_participante,  # Nova importação
-    add_timestamp,
-    to_dict
+    get_participantes_by_oficina,
+    get_oficinas_by_participante,
+    add_timestamp
 )
-from models import InscricaoCreate, Inscricao
+from models import InscricaoCreate
 
 router = APIRouter()
 
@@ -41,17 +39,14 @@ async def inscrever_participante(
     user: dict = Depends(verify_firebase_token)
 ):
     """Inscribe a participant in a workshop"""
-    # Check if participant exists
     participante_doc = participantes_ref.document(inscricao.participante_id).get()
     if not participante_doc.exists:
         raise HTTPException(status_code=404, detail="Participant not found")
     
-    # Check if workshop exists
     oficina_doc = oficinas_ref.document(inscricao.oficina_id).get()
     if not oficina_doc.exists:
         raise HTTPException(status_code=404, detail="Workshop not found")
 
-    # Check for existing inscription
     existing_inscricao = await get_inscricao(inscricao.participante_id, inscricao.oficina_id)
     if existing_inscricao:
         raise HTTPException(
@@ -61,8 +56,8 @@ async def inscrever_participante(
     
     inscricao_dict = inscricao.dict()
     inscricao_dict = add_timestamp(inscricao_dict)
-    inscricao_dict["data_inscricao"] = datetime.now().isoformat() # Adiciona data da inscrição
-    inscricao_dict["inscrito_por"] = user['uid'] # Quem fez a inscrição
+    inscricao_dict["data_inscricao"] = datetime.now().isoformat()
+    inscricao_dict["inscrito_por"] = user['uid']
     
     doc_ref = inscricoes_ref.add(inscricao_dict)
     return {"message": "Participant inscribed successfully", "id": doc_ref[1].id}

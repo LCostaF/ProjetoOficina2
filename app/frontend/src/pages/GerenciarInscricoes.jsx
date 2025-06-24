@@ -1,11 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiArrowLeft, FiUserPlus, FiTrash2, FiSearch } from "react-icons/fi";
+import { FiArrowLeft, FiUserPlus, FiTrash2 } from "react-icons/fi";
 import { useApi } from "@/services/apiService";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import "@/styles/global.css";
-import "@/styles/gerenciarInscricoes.css"; // Novo arquivo de estilo
+import "@/styles/gerenciarInscricoes.css";
 
 const MySwal = withReactContent(Swal);
 
@@ -15,7 +15,7 @@ export default function GerenciarInscricoes() {
 
   const [oficinas, setOficinas] = useState([]);
   const [participantesDisponiveis, setParticipantesDisponiveis] = useState([]);
-  const [participantesInscritos, setParticipantesInscritos] = useState([]); // Participantes já inscritos na oficina selecionada
+  const [participantesInscritos, setParticipantesInscritos] = useState([]);
 
   const [selectedOficinaId, setSelectedOficinaId] = useState("");
   const [selectedParticipanteToAdd, setSelectedParticipanteToAdd] = useState("");
@@ -66,7 +66,6 @@ export default function GerenciarInscricoes() {
       setLoadingContent(true);
       setErrorMessage("");
       try {
-        // Este endpoint agora retorna os dados completos dos participantes E o ID da inscrição
         const data = await api.inscricoes.listarParticipantesInscritos(selectedOficinaId);
         setParticipantesInscritos(data);
       } catch (err) {
@@ -96,10 +95,9 @@ export default function GerenciarInscricoes() {
     try {
       await api.inscricoes.inscrever(selectedOficinaId, selectedParticipanteToAdd);
       setSuccessMessage("Participante inscrito com sucesso!");
-      // Atualizar a lista de inscritos após a inscrição
       const updatedInscritos = await api.inscricoes.listarParticipantesInscritos(selectedOficinaId);
       setParticipantesInscritos(updatedInscritos);
-      setSelectedParticipanteToAdd(""); // Limpar o select após a inscrição
+      setSelectedParticipanteToAdd("");
     } catch (err) {
       console.error("Erro ao inscrever participante:", err);
       const msg = err.message || "Erro ao inscrever participante. Tente novamente.";
@@ -107,7 +105,7 @@ export default function GerenciarInscricoes() {
     }
   };
 
-  const handleRemoverInscricao = async (participanteId, inscricaoId) => { // Agora recebemos inscricaoId
+  const handleRemoverInscricao = async (participanteId, inscricaoId) => {
     MySwal.fire({
       title: 'Tem certeza?',
       text: `Remover a inscrição de ${participantesDisponiveis.find(p => p.id === participanteId)?.nome} desta oficina?`,
@@ -126,9 +124,8 @@ export default function GerenciarInscricoes() {
             return;
         }
         try {
-          await api.inscricoes.removerInscricao(inscricaoId); // Use a ID da inscrição aqui
+          await api.inscricoes.removerInscricao(inscricaoId);
           setSuccessMessage("Inscrição removida com sucesso!");
-          // Atualizar a lista de inscritos
           const updatedInscritos = await api.inscricoes.listarParticipantesInscritos(selectedOficinaId);
           setParticipantesInscritos(updatedInscritos);
         } catch (err) {
@@ -142,13 +139,12 @@ export default function GerenciarInscricoes() {
   const filteredParticipantesDisponiveis = useMemo(() => {
     const inscritosIds = new Set(participantesInscritos.map(p => p.id));
     return participantesDisponiveis.filter(p =>
-      !inscritosIds.has(p.id) && // Não mostrar quem já está inscrito
+      !inscritosIds.has(p.id) &&
       (p.nome.toLowerCase().includes(searchTermParticipante.toLowerCase()) ||
        (p.cpf && p.cpf.includes(searchTermParticipante)))
     );
   }, [participantesDisponiveis, participantesInscritos, searchTermParticipante]);
 
-  // --- Renderização ---
   if (apiLoading && !isReady) {
     return (
       <div className="gerenciar-inscricoes-container loading-state">
@@ -248,7 +244,7 @@ export default function GerenciarInscricoes() {
                       <span>{inscrito.nome} ({inscrito.cpf})</span>
                       <button
                         type="button"
-                        onClick={() => handleRemoverInscricao(inscrito.id, inscrito.inscricao_id)} // Passa a ID do participante E o ID da inscrição
+                        onClick={() => handleRemoverInscricao(inscrito.id, inscrito.inscricao_id)}
                         className="remove-button"
                         disabled={loadingContent}
                       >

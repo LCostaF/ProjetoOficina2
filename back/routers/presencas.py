@@ -1,15 +1,13 @@
-# back/routers/presencas.py
-from typing import List, Optional # Adicione Optional
+from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Depends, status, Header
 from datetime import datetime
-from firebase_admin import firestore, auth
+from firebase_admin import auth
 
 from database import db, add_timestamp, to_dict
 from models import PresencaCreate
 
 router = APIRouter()
 
-# Coleção Firestore
 presencas_ref = db.collection('presencas')
 
 async def verify_firebase_token(authorization: str = Header(...)):
@@ -30,7 +28,7 @@ async def verify_firebase_token(authorization: str = Header(...)):
         )
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def registrar_ou_atualizar_presenca( # Nome da função atualizado para clareza
+async def registrar_ou_atualizar_presenca(
     presenca: PresencaCreate,
     user: dict = Depends(verify_firebase_token)
 ):
@@ -42,7 +40,6 @@ async def registrar_ou_atualizar_presenca( # Nome da função atualizado para cl
     try:
         data_iso = datetime.fromisoformat(presenca.data).date().isoformat()
         
-        # Procura por um registro de presença existente para esta oficina e data
         query = presencas_ref.where('oficina_id', '==', presenca.oficina_id) \
                             .where('data', '==', data_iso) \
                             .limit(1)
@@ -54,7 +51,6 @@ async def registrar_ou_atualizar_presenca( # Nome da função atualizado para cl
         presenca_dict['registrado_por'] = user['uid']
         
         if docs:
-            # Atualiza o documento existente
             doc_ref = docs[0].reference
             update_data = add_timestamp(presenca_dict, update=True)
             doc_ref.update(update_data)
@@ -63,7 +59,6 @@ async def registrar_ou_atualizar_presenca( # Nome da função atualizado para cl
                 "id": doc_ref.id
             }
         else:
-            # Cria um novo documento
             insert_data = add_timestamp(presenca_dict)
             _, doc_ref = presencas_ref.add(insert_data)
             return {
@@ -77,11 +72,10 @@ async def registrar_ou_atualizar_presenca( # Nome da função atualizado para cl
             detail=f"Erro ao processar presenças: {str(e)}"
         )
 
-# NOVO ENDPOINT para buscar presença por data
 @router.get("/oficina/{oficina_id}/data/{data_iso}", response_model=Optional[dict])
 async def obter_presenca_por_data(
     oficina_id: str,
-    data_iso: str, # Formato YYYY-MM-DD
+    data_iso: str,
     user: dict = Depends(verify_firebase_token)
 ):
     """Obtém um registro de presença de uma oficina em uma data específica."""
@@ -92,7 +86,7 @@ async def obter_presenca_por_data(
         docs = list(query.stream())
         if docs:
             return to_dict(docs[0])
-        return None # Retorna null se não encontrar
+        return None
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

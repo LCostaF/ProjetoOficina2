@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Query, Header
 from firebase_admin import firestore, auth
 from typing import List, Optional
-from datetime import date, datetime
+from datetime import date
 
 from database import (
     oficinas_ref,
@@ -11,7 +11,7 @@ from database import (
     get_oficinas_by_instrutor
 )
 
-from models import OficinaCreate, OficinaBase
+from models import OficinaCreate
 
 router = APIRouter()
 

@@ -112,7 +112,6 @@
   opacity: 0.4;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .welcome-title {
     font-size: 2rem;

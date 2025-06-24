@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiArrowLeft, FiSave } from "react-icons/fi";
 import { useApi } from "@/services/apiService";
-import "@/styles/registro.css"; // Reutilizando estilos existentes
+import "@/styles/registro.css";
 import "@/styles/global.css";
 
 export default function EditarParticipante() {
@@ -25,7 +25,6 @@ export default function EditarParticipante() {
                 const data = await api.participantes.getById(id);
                 setNome(data.nome || "");
                 setCpf(data.cpf || "");
-                // A API retorna data no formato YYYY-MM-DD, que é o que o input type="date" espera
                 setDataNascimento(data.data_nascimento || "");
                 setInstituicao(data.instituicao || "");
             } catch (err) {

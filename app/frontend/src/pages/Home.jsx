@@ -97,7 +97,7 @@ export default function Dashboard() {
 
           <div className="dashboard-card">
             <div className="card-icon">
-              <FiUserPlus /> {/* Ou outro ícone, como FiLink */}
+              <FiUserPlus />
             </div>
             <h3 className="card-title">Gerenciar Inscrições</h3>
             <p className="card-description">
@@ -110,7 +110,7 @@ export default function Dashboard() {
 
           <div className="dashboard-card">
             <div className="card-icon">
-              <FiClipboard /> {/* Ou outro ícone adequado */}
+              <FiClipboard />
             </div>
             <h3 className="card-title">Registrar Presença</h3>
             <p className="card-description">

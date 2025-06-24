@@ -1,11 +1,8 @@
-# back/database.py
-
 import firebase_admin
 from firebase_admin import credentials, firestore
 import os
 from datetime import datetime, date
 
-# Initialize Firebase
 try:
     firebase_admin.get_app()
 except ValueError:
@@ -15,14 +12,10 @@ except ValueError:
     else:
         firebase_admin.initialize_app()
 
-# Firestore reference
 db = firestore.client()
 
-# Collection references
 oficinas_ref = db.collection('oficinas')
 participantes_ref = db.collection('participantes')
-# REMOVA ESTA LINHA
-# presencas_ref = db.collection('presencas')
 inscricoes_ref = db.collection('inscricoes')
 
 def to_dict(doc):

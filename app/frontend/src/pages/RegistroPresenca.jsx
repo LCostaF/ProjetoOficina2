@@ -1,4 +1,3 @@
-// app/frontend/src/pages/RegistroPresenca.jsx
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "@/services/apiService";
@@ -23,7 +22,6 @@ export default function RegistroPresenca() {
     const [success, setSuccess] = useState("");
     const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
 
-    // Carregar oficinas (sem alterações aqui)
     useEffect(() => {
         const fetchOficinas = async () => {
             setLoading(true);
@@ -44,7 +42,6 @@ export default function RegistroPresenca() {
         }
     }, [api, isReady]);
 
-    // LÓGICA ATUALIZADA AQUI: Carregar participantes E presenças existentes
     useEffect(() => {
         const fetchDadosDaOficina = async () => {
             if (!selectedOficinaId) {
@@ -54,25 +51,16 @@ export default function RegistroPresenca() {
 
             setLoading(true);
             setError("");
-            setSuccess(""); // Limpa a mensagem de sucesso ao trocar de oficina/data
+            setSuccess("");
 
             try {
-                // 1. Busca a lista de todos os participantes inscritos na oficina
                 const promiseInscritos = api.inscricoes.listarParticipantesInscritos(selectedOficinaId);
-                
-                // 2. Busca o registro de presença para a data selecionada
                 const promisePresenca = api.presencas.obterPorOficinaEData(selectedOficinaId, currentDate);
-
-                // Executa as duas buscas em paralelo
                 const [listaDeInscritos, dadosPresencaExistente] = await Promise.all([promiseInscritos, promisePresenca]);
-
-                // 3. Cria um Set com os IDs dos participantes presentes para busca rápida
                 const presentesIds = new Set(dadosPresencaExistente?.participantes_presentes || []);
-
-                // 4. Combina as informações: marca como presente quem estiver na lista
                 const participantesComPresenca = listaDeInscritos.map(participante => ({
                     ...participante,
-                    presente: presentesIds.has(participante.id) // Verifica se o ID está no Set
+                    presente: presentesIds.has(participante.id)
                 }));
 
                 setParticipantesInscritos(participantesComPresenca);
@@ -80,7 +68,7 @@ export default function RegistroPresenca() {
             } catch (err) {
                 console.error("Erro ao carregar dados da oficina:", err);
                 setError("Erro ao carregar participantes ou presenças. Tente novamente.");
-                setParticipantesInscritos([]); // Limpa em caso de erro
+                setParticipantesInscritos([]);
             } finally {
                 setLoading(false);
             }
@@ -89,10 +77,8 @@ export default function RegistroPresenca() {
         if (isReady && selectedOficinaId) {
             fetchDadosDaOficina();
         }
-    // Adicionamos 'currentDate' para que a busca seja refeita quando a data mudar
     }, [api, isReady, selectedOficinaId, currentDate]);
 
-    // Filtrar participantes (sem alterações aqui)
     const filteredParticipantes = useMemo(() => {
         if (!searchTerm) return participantesInscritos;
         return participantesInscritos.filter(p =>
@@ -101,7 +87,6 @@ export default function RegistroPresenca() {
         );
     }, [participantesInscritos, searchTerm]);
 
-    // Alternar presença (sem alterações aqui)
     const togglePresenca = (participanteId) => {
         setParticipantesInscritos(prev =>
             prev.map(p =>
@@ -110,7 +95,6 @@ export default function RegistroPresenca() {
         );
     };
 
-    // Registrar presenças (pequena alteração na mensagem de sucesso)
     const registrarPresencas = async () => {
         if (!selectedOficinaId) {
             setError("Selecione uma oficina antes de registrar presenças.");
@@ -128,7 +112,7 @@ export default function RegistroPresenca() {
         try {
             const response = await api.presencas.registrar(selectedOficinaId, currentDate, participantesPresentes);
 
-            setSuccess(response.message); // Usa a mensagem da API (Registrada ou Atualizada)
+            setSuccess(response.message);
 
             MySwal.fire({
                 title: 'Sucesso!',
@@ -136,10 +120,6 @@ export default function RegistroPresenca() {
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
-            
-            // Não limpamos mais a seleção, pois o estado agora reflete o que foi salvo.
-            // Apenas para garantir que o loading pare.
-
         } catch (err) {
             console.error("Erro ao registrar presenças:", err);
             setError(err.message || "Erro ao registrar presenças. Tente novamente.");
@@ -148,7 +128,6 @@ export default function RegistroPresenca() {
         }
     };
     
-    // O resto do componente JSX permanece o mesmo...
     return (
         <div className="registro-presenca-container">
             <div className="registro-presenca-card">
@@ -267,7 +246,7 @@ export default function RegistroPresenca() {
                                     {loading ? (
                                         <span className="spinner"></span>
                                     ) : (
-                                        'Salvar Presenças' // Texto alterado para mais clareza
+                                        'Salvar Presenças'
                                     )}
                                 </button>
                             </div>

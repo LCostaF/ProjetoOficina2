@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiPlusCircle } from "react-icons/fi";
 import { useApi } from "@/services/apiService";
-import "@/styles/registro.css"; // Reutilizando estilos existentes
+import "@/styles/registro.css";
 import "@/styles/global.css";
 
 export default function CadastroParticipante() {
@@ -23,7 +23,6 @@ export default function CadastroParticipante() {
         if (!dataNascimento) newErrors.dataNascimento = "A data de nascimento é obrigatória.";
         if (!instituicao.trim()) newErrors.instituicao = "A instituição é obrigatória.";
 
-        // Validação simples de CPF (11 dígitos)
         if (cpf.trim() && !/^\d{11}$/.test(cpf.replace(/[.-]/g, ''))) {
             newErrors.cpf = "CPF inválido. Deve conter 11 dígitos.";
         }
@@ -43,7 +42,7 @@ export default function CadastroParticipante() {
 
         const participanteData = {
             nome,
-            cpf: cpf.replace(/[.-]/g, ''), // Envia apenas os números
+            cpf: cpf.replace(/[.-]/g, ''),
             data_nascimento: dataNascimento,
             instituicao,
         };

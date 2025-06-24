@@ -10,7 +10,7 @@
 
 .registro-presenca-card {
     width: 100%;
-    max-width: 900px; /* Ajuste para ter mais espaço */
+    max-width: 900px;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -63,7 +63,7 @@
 
 .search-bar input {
     width: 100%;
-    padding: 12px 12px 12px 40px; /* Aumenta o padding para o ícone */
+    padding: 12px 12px 12px 40px;
     border-radius: 6px;
     border: 1px solid #e2e8f0;
     font-size: 1rem;
@@ -85,7 +85,7 @@
 }
 
 .participantes-table-container {
-    max-height: 400px; /* Altura máxima para a tabela com scroll */
+    max-height: 400px;
     overflow-y: auto;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -110,7 +110,7 @@
     font-weight: 600;
     position: sticky;
     top: 0;
-    z-index: 2; /* Garante que o cabeçalho fique por cima no scroll */
+    z-index: 2;
 }
 
 .participantes-table tbody tr:last-child td {
@@ -119,7 +119,7 @@
 
 .participantes-table td {
     color: var(--ellp-dark);
-    background-color: white; /* Garante que o fundo da célula é branco */
+    background-color: white;
 }
 
 .participantes-table tr:hover td {
@@ -129,18 +129,17 @@
 .participantes-table input[type="checkbox"] {
     transform: scale(1.2);
     cursor: pointer;
-    margin: 0; /* Remove margem padrão */
+    margin: 0;
 }
 
-/* Estilo para a coluna do dia atual */
 .today-column {
-    background-color: #d1f7e0 !important; /* Cor mais clara para o cabeçalho do dia atual */
-    color: #28a745 !important; /* Cor de texto verde */
+    background-color: #d1f7e0 !important;
+    color: #28a745 !important;
     font-weight: bold !important;
 }
 
 .today-cell {
-    background-color: #e6ffe6; /* Fundo suave para a célula do dia atual */
+    background-color: #e6ffe6;
 }
 
 .today-badge {
@@ -196,7 +195,7 @@
     color: var(--ellp-gray);
     font-size: 1.1rem;
     padding: 30px;
-    background-color: #f0f4f8; /* Um fundo suave para destaque */
+    background-color: #f0f4f8;
     border-radius: 8px;
     margin-top: 20px;
 }
@@ -312,18 +311,17 @@
   box-shadow: none;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
     .registro-presenca-card {
         padding: 30px 20px;
     }
 
     .participantes-table-container {
-        overflow-x: auto; /* Adiciona scroll horizontal em telas menores */
+        overflow-x: auto;
     }
 
     .participantes-table {
-        min-width: 600px; /* Garante que a tabela não fique muito pequena */
+        min-width: 600px;
     }
 
     .registro-presenca-header h2 {
